@@ -1,16 +1,35 @@
-# NOTE: update this with your service name
 service: farmlist-api
 
-# Create an optimized package for our functions
 package:
   individually: true
 
 plugins:
-  - serverless-bundle # Package our functions with Webpack
+  - serverless-bundle
   - serverless-offline
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
   runtime: nodejs12.x
   stage: prod
-  region: us-east-1
+  region: us-east-1 #change
+
+  environment:
+    airtableSecretKey: ${env:AIRTABLE_SECRET_KEY}
+
+resources:
+  # API Gateway Errors
+  - ${file(resources/api-gateway-errors.yml)}
+
+functions:
+  list:
+    # Defines an HTTP API endpoint that calls the main function in list.js
+    handler: list.main
+    events:
+      - http:
+          path: farms
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+
