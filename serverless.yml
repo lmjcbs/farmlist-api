@@ -12,7 +12,8 @@ provider:
   name: aws
   runtime: nodejs12.x
   stage: prod
-  region: us-east-1 #change
+  region: us-west-2
+  profile: farmlist
 
   environment:
     airtableSecretKey: ${env:AIRTABLE_SECRET_KEY}
@@ -28,7 +29,7 @@ functions:
     events:
       - http:
           path: farms
-          method: get
+          method: post
           cors: true
           authorizer: aws_iam
 
